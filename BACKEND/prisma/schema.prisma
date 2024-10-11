@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model ROL {
+  ID_ROL Int     @id @default(autoincrement())
+  ROL    String
+  ESTADO Boolean
+  USUARIO USUARIO[]
+}
+
+model TIPO_DOCUMENTO {
+  ID_TIPO_DOCUMENTO Int       @id @default(autoincrement())
+  DOCUMENTO         String
+  PERSONA   PERSONA[]
+}
+
+model USUARIO {
+  ID_USUARIO        Int            @id @default(autoincrement())
+  ROL ROL @relation(fields: [FK_ROL],references: [ID_ROL])
+  FK_ROL Int
+  USUARIO String
+  CLAVE String @db.Text
+  ESTADO Boolean
+  PERSONA PERSONA[]
+}
+
+model PERSONA {
+  ID_PERSONA Int @id @default(autoincrement())
+  USUARIO USUARIO @relation(fields: [FK_USUARIO], references: [ID_USUARIO])
+  FK_USUARIO Int
+
+  TIPO_DOCUMENTO    TIPO_DOCUMENTO @relation(fields: [FK_TIPO_DOCUMENTO], references: [ID_TIPO_DOCUMENTO])
+  FK_TIPO_DOCUMENTO Int
+  DOCUMENTO String  @db.VarChar(11)
+  NOMBRES String 
+  APELLIDOS String
+}
